@@ -1,8 +1,11 @@
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Stack;
 
 
 public class WorldPositioningSystem {
     private static WorldPositioningSystem ourInstance = new WorldPositioningSystem();
+    private static HashMap<Point, GridPoint> pointGridMapping = new HashMap<>();
     public static WorldPositioningSystem getInstance() {
         return ourInstance;
     }
@@ -16,6 +19,23 @@ public class WorldPositioningSystem {
 
     private WorldPositioningSystem(){
     }
+
+    public static void createPathBetween(GridPoint point1, GridPoint point2){
+
+    }
+
+    public static TrafficFlow determineOrientation(Point point1, Point point2){
+        return null;
+    }
+
+    public static void installGridNode(GridPoint node){
+        pointGridMapping.put(node.getPoint(), node);
+    }
+
+    public static Stack<Point> getInstruction(String currentRoad, Movable.MOVEMENT nextDirection){
+        return null;
+    }
+
 
     public static void setWorldDimensions(int width, int height){
         worldHeight = height;

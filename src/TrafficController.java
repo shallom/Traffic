@@ -1,4 +1,4 @@
 public interface TrafficController {
 
-    void giveTrafficOrder();
+    void setTrafficOrder();
 }
