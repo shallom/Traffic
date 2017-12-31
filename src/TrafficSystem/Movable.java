@@ -1,4 +1,4 @@
-import java.awt.*;
+package TrafficSystem;
 
 public interface Movable {
 

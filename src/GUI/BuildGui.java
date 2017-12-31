@@ -1,32 +1,45 @@
+package GUI;
+
+import MappingSystem.WorldPositioningSystem;
+import TrafficSystem.Intersection;
+import Canvas.RenderWorld;
+import Canvas.TrafficSystemCreator;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class World {
+public class BuildGui {
 
-    private JFrame worldFrame;
-    private ArrayList<Intersection> intersections;
+    private static BuildGui ourInstance = new BuildGui();
+    private static JFrame contentFrame;
 
-    public World(int width, int height){
-        worldFrame = new JFrame("Traffic");
-        worldFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        worldFrame.setSize(width, height);
-        worldFrame.setLocationRelativeTo(null);
-        worldFrame.setVisible(false); //need to set this to true when we are ready to start running
-        worldFrame.setBackground(Color.green);
-        worldFrame.add(RenderCanvas.getInstance());
-        intersections = new ArrayList<>();
+    public static BuildGui getInstance(){
+        return ourInstance;
+    }
+
+    private BuildGui(){
+    }
+
+    public static void createFrame(int width, int height){
+        contentFrame = new JFrame("Traffic");
+        contentFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        contentFrame.setPreferredSize(new Dimension(width, height));
+        contentFrame.setLocationRelativeTo(null);
+        contentFrame.add(RenderWorld.getInstance(), BorderLayout.CENTER);
+        contentFrame.pack();
+        contentFrame.setVisible(true); //need to set this to true when we are ready to start running
         WorldPositioningSystem.setWorldDimensions(width, height);
-        worldFrame.addComponentListener(new ComponentAdapter()
+        contentFrame.addComponentListener(new ComponentAdapter()
         {
             public void componentResized(ComponentEvent evt) {
                 System.out.println("JFrame has  been  resized");
-                RenderCanvas.repaintWorld();
+                RenderWorld.getInstance().repaint();
             }
         });
-
-        worldFrame.addWindowListener(new WindowListener() {
+        contentFrame.addMouseListener(TrafficSystemCreator.getInstance());
+        contentFrame.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
                 System.out.println("JFrame has  been  made visible first  time");
@@ -62,19 +75,20 @@ public class World {
                 System.out.println("JFrame is deactivated.");
             }
         });
+
     }
 
-    public void newInterSection(){
-        intersections.add(new Intersection(1, 250, 250, 100));
+    public static JFrame getContentFrame() {
+        return contentFrame;
     }
 
     public void run(){
        // try {
-        worldFrame.setVisible(true);
+        contentFrame.setVisible(true);
         Timer timer = new Timer(50, new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Repainting");
-                RenderCanvas.getInstance().repaint();
+                RenderWorld.getInstance().repaint();
             }
         });
         timer.start();

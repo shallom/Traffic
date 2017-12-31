@@ -1,12 +1,11 @@
-import java.awt.*;
-import java.util.HashSet;
+import GUI.BuildGui;
 
 public class Build {
 
 
     public static void main(String[] args){
-        World trafficWorld = new World(1000, 1000);
-        trafficWorld.newInterSection();
-        trafficWorld.run();
+        BuildGui.createFrame(1000, 1000);
+//        trafficBuildGui.newInterSection();
+//        trafficBuildGui.run();
     }
 }

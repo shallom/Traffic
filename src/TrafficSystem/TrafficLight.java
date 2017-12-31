@@ -1,6 +1,10 @@
+package TrafficSystem;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import Canvas.Renderable;
+
 
 public class TrafficLight extends Renderable implements TrafficController{
 
@@ -39,8 +43,13 @@ public class TrafficLight extends Renderable implements TrafficController{
     }
 
     @Override
+    public Renderable.TrafficType getType() {
+        return TrafficType.TRAFFIC_LIGHT;
+    }
+
+    @Override
     public void paint(Graphics2D g2d) {
-        System.out.println("painting road");
+        System.out.println("Painting Light");
         g2d.setColor(currentLight);
         g2d.fill(trafficLight);
     }

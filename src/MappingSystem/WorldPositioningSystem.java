@@ -1,4 +1,11 @@
+package MappingSystem;
+
+import TrafficSystem.Intersection;
+import TrafficSystem.Movable;
+import TrafficSystem.TrafficFlow;
+
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -6,6 +13,7 @@ import java.util.Stack;
 public class WorldPositioningSystem {
     private static WorldPositioningSystem ourInstance = new WorldPositioningSystem();
     private static HashMap<Point, GridPoint> pointGridMapping = new HashMap<>();
+    private static ArrayList<Intersection> intersections;
     public static WorldPositioningSystem getInstance() {
         return ourInstance;
     }
@@ -18,6 +26,11 @@ public class WorldPositioningSystem {
     public enum WPS_RESULT {ADDED, OCCUPIED, AT_EDGE, OFF_MAP, MOVED}
 
     private WorldPositioningSystem(){
+        intersections = new ArrayList<>();
+    }
+
+    public static void addIntersection(Intersection intersection){
+        intersections.add(intersection);
     }
 
     public static void createPathBetween(GridPoint point1, GridPoint point2){

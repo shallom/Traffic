@@ -1,7 +1,12 @@
+package TrafficSystem;
+
 import java.awt.*;
+import Canvas.Renderable;
+import MappingSystem.GridPoint;
+import MappingSystem.WorldPositioningSystem;
 
 
-public class Road extends Landscape{
+public class Road extends Renderable{
 
     private Rectangle roadImage;
     private TrafficFlow flow;
@@ -34,6 +39,11 @@ public class Road extends Landscape{
             return endNode;
         }
         return startNode;
+    }
+
+    @Override
+    public Renderable.TrafficType getType() {
+        return TrafficType.ROAD;
     }
 
     @Override

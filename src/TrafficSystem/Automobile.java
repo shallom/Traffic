@@ -1,6 +1,13 @@
+package TrafficSystem;
+
+import MappingSystem.GridPoint;
+import MappingSystem.OffTheGridException;
+import MappingSystem.WorldPositioningSystem;
+import Canvas.Renderable;
+
+
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Stack;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Automobile extends Renderable implements TrafficControlListener, Movable {
@@ -30,6 +37,10 @@ public class Automobile extends Renderable implements TrafficControlListener, Mo
     }
 
 
+    @Override
+    public Renderable.TrafficType getType() {
+        return null;
+    }
 
     @Override
     public void paint(Graphics2D g2d) {
