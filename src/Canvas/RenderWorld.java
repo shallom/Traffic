@@ -41,6 +41,14 @@ public class RenderWorld extends JPanel{
         }
     }
 
+    public static void delete(Renderable renderable){
+        if(renderable.getType() == Renderable.TrafficType.INTERSECTION || renderable.getType() == Renderable.TrafficType.ROAD ){
+            backGroundRenderQue.remove(renderable);
+        }else{
+            foreGroundRenderQue.remove(renderable);
+        }
+    }
+
     public static void addToRenderQue(Renderable object){
         if(object.getType() == Renderable.TrafficType.INTERSECTION || object.getType() == Renderable.TrafficType.ROAD ){
             backGroundRenderQue.add(object);

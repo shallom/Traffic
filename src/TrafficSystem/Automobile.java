@@ -1,39 +1,35 @@
 package TrafficSystem;
 
 import MappingSystem.GridPoint;
-import MappingSystem.OffTheGridException;
 import MappingSystem.WorldPositioningSystem;
 import Canvas.Renderable;
 
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Automobile extends Renderable implements TrafficControlListener, Movable {
 
-    private GridPoint curLocation;
-    private Dimension dimension;
-    private int uniqueID;
+    private ArrayList<GridPoint> curLocation;
+    private Rectangle automobileImage;
     private String currentRoad;
+    private boolean rotate;
+    private double degreeToRotate;
 
-    public Automobile(String currentRoad, GridPoint curLocation) throws OffTheGridException {
+    public Automobile(String currentRoad, ArrayList<GridPoint> curLocation){
+        rotate = false;
+        updateRenderQue();
         this.currentRoad = currentRoad;
-        TrafficFlow direction = WorldPositioningSystem.determineOrientation(curLocation.getPoint(), curLocation.getAdjacentPoint().getPoint());
-        if(direction == TrafficFlow.LEFT_TO_RIGHT){
-            dimension = new Dimension(300, 100);
-        }else {
-            dimension = new Dimension(100, 300);
-        }
         this.curLocation = curLocation;
-        uniqueID = WorldPositioningSystem.getUniqueID();
-        WorldPositioningSystem.WPS_RESULT result;
-        do{
-            result = WorldPositioningSystem.addToWorld(curLocation.getPoint(), dimension, uniqueID);
-            if(result == WorldPositioningSystem.WPS_RESULT.OFF_MAP){
-                throw new OffTheGridException("Automobile position is of grid");
-            }
-        } while(result == WorldPositioningSystem.WPS_RESULT.OCCUPIED);
+        TrafficFlow direction = WorldPositioningSystem.determineOrientation(curLocation.get(0).getPoint(), curLocation.get(curLocation.size()- 1).getPoint());
+        if(direction == TrafficFlow.LEFT_TO_RIGHT){
+            automobileImage = new Rectangle(new Point(curLocation.get(curLocation.size() -1).getPoint().x, curLocation.get(curLocation.size() -1).getPoint().y - (GlobalConstants.CAR_WIDTH / 2)),
+                    new Dimension(GlobalConstants.CAR_LENGTH, GlobalConstants.CAR_WIDTH));
+        }else {
+            automobileImage = new Rectangle(new Point(curLocation.get(curLocation.size() - 1).getPoint().x - (GlobalConstants.CAR_WIDTH / 2), curLocation.get(curLocation.size() - 1).getPoint().y),
+                    new Dimension(GlobalConstants.CAR_WIDTH, GlobalConstants.CAR_LENGTH));
+        }
+        WorldPositioningSystem.installRenderable(curLocation, this);
     }
 
 
@@ -43,8 +39,20 @@ public class Automobile extends Renderable implements TrafficControlListener, Mo
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
+    public void delete() {
 
+    }
+
+    @Override
+    public void paint(Graphics2D g2d) {
+        System.out.println("painting automobile");
+        g2d.setColor(Color.BLACK);
+        g2d.fill(automobileImage);
+        if(rotate){
+            Point origin = curLocation.get(curLocation.size() / 2).getPoint();
+            g2d.rotate(degreeToRotate, origin.x, origin.y);
+            rotate = false;
+        }
     }
 
     @Override
@@ -52,48 +60,53 @@ public class Automobile extends Renderable implements TrafficControlListener, Mo
 
     }
 
-    private void swap(){
-        int temp = dimension.height;
-        dimension.height = dimension.width;
-        dimension.width = temp;
-    }
-
     private void calibrateDimension(Point nextPoint){
-        if(nextPoint.x == curLocation.getPoint().x){
-            //moving left to right
-            if(dimension.width < dimension.height){
-                swap();
-            }
-        }else if(nextPoint.y == curLocation.getPoint().y){
-            //moving up and down
-            if(dimension.width > dimension.height){
-                swap();
-            }
+        Point origin = curLocation.get(curLocation.size() / 2).getPoint();
+        Point savedNextPoint = new Point(nextPoint);
+        nextPoint.x -= origin.x;
+        nextPoint.y -= origin.y;
+        nextPoint.x = Math.abs(nextPoint.x);
+        nextPoint.y = Math.abs(nextPoint.y);
+        if(savedNextPoint.y < origin.y || savedNextPoint.x < origin .y){
+            rotate = true;
+            degreeToRotate = Math.toDegrees(Math.atan2(nextPoint.x, nextPoint.y));
+        }else if(savedNextPoint.y > origin.y || savedNextPoint.x > origin .y){
+            rotate = true;
+            degreeToRotate = -Math.toDegrees(Math.atan2(nextPoint.x, nextPoint.y));
         }
     }
 
     private void drive(GridPoint nextLocation){
-        Dimension savedCopyOfDimension = dimension;
         calibrateDimension(nextLocation.getPoint());
-        WorldPositioningSystem.WPS_RESULT result = WorldPositioningSystem.move(curLocation.getPoint(), nextLocation.getPoint(), savedCopyOfDimension, dimension, uniqueID);
-        if (result == WorldPositioningSystem.WPS_RESULT.MOVED) {
-            curLocation = nextLocation;
+        WorldPositioningSystem.WPS_RESULT result = WorldPositioningSystem.move(nextLocation);
+        if (result == WorldPositioningSystem.WPS_RESULT.MOVE) {
+            GridPoint oldLastPoint = curLocation.get(0);
+            oldLastPoint.setForeGroundObject(null);
+            curLocation.remove(oldLastPoint);
+            nextLocation.setForeGroundObject(this);
+            curLocation.add(nextLocation);
         } else if (result == WorldPositioningSystem.WPS_RESULT.OCCUPIED) {
-            dimension = savedCopyOfDimension;
+            rotate = false;
         } else if (result == WorldPositioningSystem.WPS_RESULT.AT_EDGE) {
-            dimension.height = dimension.height / 2;
-            dimension.width = dimension.width / 2;
+            if(curLocation.get(curLocation.size() - 1).getPoint().x == curLocation.get(0).getPoint().x) {
+                //moving up and done
+                automobileImage.height = automobileImage.height / 2;
+            }else if(curLocation.get(curLocation.size() - 1).getPoint().y == curLocation.get(0).getPoint().y) {
+                //moving left to right
+                automobileImage.width = automobileImage.width / 2;
+            }
         }
     }
 
     private GridPoint determineNextPoint(){
-        ArrayList<GridPoint> gridPoints = curLocation.getAdjacentPoints();
-        return gridPoints.get(ThreadLocalRandom.current().nextInt(0, gridPoints.size()));
+        return curLocation.get(curLocation.size() - 1).getAdjacentPoint();
     }
 
     @Override
     public void move() {
-        if(curLocation.getGridPointType() == GridPoint.GridPointType.IntersectionPoint || curLocation.getGridPointType() == GridPoint.GridPointType.ConnectorPoint ||(curLocation.getGridPointType() == GridPoint.GridPointType.RoadEndPoint && TrafficLight.getTrafficOrder(currentRoad) == Instruction.GO)){
+        if(!curLocation.get(curLocation.size() - 1).isTrafficDependent() ||
+                (curLocation.get(curLocation.size() - 1).isTrafficDependent() &&
+                        TrafficLight.getTrafficInstruction(currentRoad) == Instruction.GO)){
             drive(determineNextPoint());
         }
     }

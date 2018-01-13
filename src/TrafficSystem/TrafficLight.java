@@ -3,7 +3,7 @@ package TrafficSystem;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import Canvas.Renderable;
+import Canvas.*;
 
 
 public class TrafficLight extends Renderable implements TrafficController{
@@ -18,7 +18,7 @@ public class TrafficLight extends Renderable implements TrafficController{
         trafficLightHashMap.put(trafficLight.roadToControl, trafficLight);
     }
 
-    public static Instruction getTrafficOrder(String road){
+    public static Instruction getTrafficInstruction(String road){
         if(trafficLightHashMap.get(road).currentLight == Color.red){
             return Instruction.STOP;
         }else if(trafficLightHashMap.get(road).currentLight == Color.green){
@@ -30,21 +30,36 @@ public class TrafficLight extends Renderable implements TrafficController{
     }
 
     public TrafficLight(String roadToControl, int xPos, int yPos, int length, int width){
+        updateRenderQue();
+        installTrafficLight(this);
         this.roadToControl = roadToControl;
-        trafficLight = new Rectangle(new Point(xPos,yPos), new Dimension(length, width));
-        updateRenderQue(this);
+        Point p = new Point(xPos,yPos);
+        Dimension d = new Dimension(length, width);
+        trafficLight = new Rectangle(p, d);
+        registerArea(p, d);
         currentLight = Color.RED;
         listeningObjects = new ArrayList<>();
     }
 
     @Override
-    public void setTrafficOrder() {
+    public void setTrafficControl() {
 
     }
 
     @Override
     public Renderable.TrafficType getType() {
         return TrafficType.TRAFFIC_LIGHT;
+    }
+
+    @Override
+    public void delete() {
+        System.out.println("Deleting Light");
+        if(!deleted){
+            trafficLightHashMap.remove(roadToControl);
+            RenderWorld.delete(this);
+            unregisterCanvasArea();
+        }
+        deleted = true;
     }
 
     @Override

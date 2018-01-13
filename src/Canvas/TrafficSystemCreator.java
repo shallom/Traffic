@@ -14,11 +14,10 @@ import static TrafficSystem.GlobalConstants.TWO_WAY_INTERSECTION_WIDTH;
 public class TrafficSystemCreator extends JPanel implements MouseListener, MouseMotionListener {
 
     private static TrafficSystemCreator ourInstance = new TrafficSystemCreator();
+    private static RegisterCanvasArea focusedArea;
     public static TrafficSystemCreator getInstance(){
         return ourInstance;
     }
-
-    //private
 
     private TrafficSystemCreator(){
 //        JPanel PnlTwo = new JPanel(new FlowLayout());
@@ -50,7 +49,8 @@ public class TrafficSystemCreator extends JPanel implements MouseListener, Mouse
      */
     @Override
     public void mousePressed(MouseEvent e) {
-
+        System.out.println("Mouse Pressed");
+        focusedArea = RegisterCanvasArea.getFocusedArea(e.getX(), e.getY());
     }
 
     /**
@@ -70,7 +70,6 @@ public class TrafficSystemCreator extends JPanel implements MouseListener, Mouse
      */
     @Override
     public void mouseEntered(MouseEvent e) {
-
     }
 
     /**
@@ -98,7 +97,18 @@ public class TrafficSystemCreator extends JPanel implements MouseListener, Mouse
      */
     @Override
     public void mouseDragged(MouseEvent e) {
+        //This class should not be in this package
+        System.out.println("Mouse Dragged");
+        if(focusedArea != null) {
+            //delete focused component
+            focusedArea.getRenderable().delete();
+            RenderWorld.getInstance().repaint();
 
+            //add new intersection
+            WorldPositioningSystem.addIntersection(new Intersection(2, e.getX() - TWO_WAY_INTERSECTION_WIDTH / 2, e.getY() - TWO_WAY_INTERSECTION_WIDTH));
+            RenderWorld.getInstance().repaint();
+        }
+        focusedArea = RegisterCanvasArea.getFocusedArea(e.getX(), e.getY());
     }
 
     /**

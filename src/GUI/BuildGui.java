@@ -30,15 +30,15 @@ public class BuildGui {
         contentFrame.add(RenderWorld.getInstance(), BorderLayout.CENTER);
         contentFrame.pack();
         contentFrame.setVisible(true); //need to set this to true when we are ready to start running
-        WorldPositioningSystem.setWorldDimensions(width, height);
         contentFrame.addComponentListener(new ComponentAdapter()
         {
             public void componentResized(ComponentEvent evt) {
-                System.out.println("JFrame has  been  resized");
+                System.out.println("JFrame has  been  resized: " + contentFrame.getSize());
                 RenderWorld.getInstance().repaint();
             }
         });
         contentFrame.addMouseListener(TrafficSystemCreator.getInstance());
+        contentFrame.addMouseMotionListener(TrafficSystemCreator.getInstance());
         contentFrame.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
