@@ -6,6 +6,7 @@ import Canvas.Renderable;
 
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class Automobile extends Renderable implements TrafficControlListener, Movable {
@@ -109,5 +110,10 @@ public class Automobile extends Renderable implements TrafficControlListener, Mo
                         TrafficLight.getTrafficInstruction(currentRoad) == Instruction.GO)){
             drive(determineNextPoint());
         }
+    }
+
+    @Override
+    protected void dragHandler(MouseEvent e) {
+
     }
 }

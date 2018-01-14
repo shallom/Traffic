@@ -100,13 +100,7 @@ public class TrafficSystemCreator extends JPanel implements MouseListener, Mouse
         //This class should not be in this package
         System.out.println("Mouse Dragged");
         if(focusedArea != null) {
-            //delete focused component
-            focusedArea.getRenderable().delete();
-            RenderWorld.getInstance().repaint();
-
-            //add new intersection
-            WorldPositioningSystem.addIntersection(new Intersection(2, e.getX() - TWO_WAY_INTERSECTION_WIDTH / 2, e.getY() - TWO_WAY_INTERSECTION_WIDTH));
-            RenderWorld.getInstance().repaint();
+            focusedArea.getRenderable().dragHandler(e);
         }
         focusedArea = RegisterCanvasArea.getFocusedArea(e.getX(), e.getY());
     }

@@ -1,14 +1,20 @@
 package Canvas;
 
-import MappingSystem.GridPoint;
-
 import java.awt.*;
 
 
-public abstract class Renderable {
+public abstract class Renderable extends MouseEventHandler {
 
-    protected boolean deleted = false;
+    private boolean deleted = false;
     private RegisterCanvasArea registeredCanvasArea;
+
+    protected void setDeleted(){
+        deleted = true;
+    }
+
+    public boolean isDeleted(){
+        return deleted;
+    }
 
     public void updateRenderQue(){
         RenderWorld.addToRenderQue(this);

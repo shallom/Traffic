@@ -1,6 +1,8 @@
 package TrafficSystem;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+
 import Canvas.*;
 import MappingSystem.GridPoint;
 import MappingSystem.WorldPositioningSystem;
@@ -60,14 +62,14 @@ public class Road extends Renderable{
     @Override
     public void delete() {
         System.out.println("Deleting Road");
-        if(!deleted){
+        if(!isDeleted()){
             WorldPositioningSystem.delete(startNode, endNode);
             RenderWorld.delete(this);
             WorldPositioningSystem.delete(startNode);
             WorldPositioningSystem.delete(endNode);
             unregisterCanvasArea();
         }
-        deleted = true;
+        setDeleted();
     }
 
     @Override
@@ -75,5 +77,10 @@ public class Road extends Renderable{
         System.out.println("painting road");
         g2d.setColor(Color.BLACK);
         g2d.fill(roadImage);
+    }
+
+    @Override
+    protected void dragHandler(MouseEvent e) {
+
     }
 }

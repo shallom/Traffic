@@ -1,6 +1,7 @@
 package TrafficSystem;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import Canvas.*;
@@ -54,12 +55,12 @@ public class TrafficLight extends Renderable implements TrafficController{
     @Override
     public void delete() {
         System.out.println("Deleting Light");
-        if(!deleted){
+        if(!isDeleted()){
             trafficLightHashMap.remove(roadToControl);
             RenderWorld.delete(this);
             unregisterCanvasArea();
         }
-        deleted = true;
+        setDeleted();
     }
 
     @Override
@@ -67,5 +68,10 @@ public class TrafficLight extends Renderable implements TrafficController{
         System.out.println("Painting Light");
         g2d.setColor(currentLight);
         g2d.fill(trafficLight);
+    }
+
+    @Override
+    protected void dragHandler(MouseEvent e) {
+
     }
 }

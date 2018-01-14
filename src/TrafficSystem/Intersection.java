@@ -5,6 +5,7 @@ import MappingSystem.WorldPositioningSystem;
 import Canvas.*;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import static TrafficSystem.GlobalConstants.INITIAL_ROAD_LENGTH;
@@ -20,7 +21,7 @@ public class Intersection extends Renderable{
 
     public Intersection(int numberWayInterSection, int xPos, int yPos){
         updateRenderQue();
-        deleted = false;
+
         roads = new ArrayList<>();
         intersectionPoint = new Point(xPos, yPos);
         trafficLights = new ArrayList<>();
@@ -81,7 +82,7 @@ public class Intersection extends Renderable{
     @Override
     public void delete() {
         System.out.println("Deleting Intersection");
-        if(!deleted){
+        if(!isDeleted()){
             //delete the traffic light
             for(TrafficLight trafficLight : trafficLights){
                 trafficLight.delete();
@@ -107,7 +108,7 @@ public class Intersection extends Renderable{
             RenderWorld.delete(this);
             unregisterCanvasArea();
         }
-        deleted = true;
+        setDeleted();
     }
 
 
@@ -116,5 +117,15 @@ public class Intersection extends Renderable{
         System.out.println("painting intersection");
         g2d.setColor(Color.BLACK);
         g2d.fill(intersection);
+    }
+
+    @Override
+    protected void dragHandler(MouseEvent e) {
+        delete();
+        RenderWorld.getInstance().repaint();
+
+        //add new intersection
+        WorldPositioningSystem.addIntersection(new Intersection(2, e.getX() - TWO_WAY_INTERSECTION_WIDTH / 2, e.getY() - TWO_WAY_INTERSECTION_WIDTH));
+        RenderWorld.getInstance().repaint();
     }
 }
