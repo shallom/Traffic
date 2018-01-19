@@ -73,7 +73,7 @@ public class Road extends Renderable{
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
+    public void render(Graphics2D g2d) {
         System.out.println("painting road");
         g2d.setColor(Color.BLACK);
         g2d.fill(roadImage);
@@ -81,6 +81,6 @@ public class Road extends Renderable{
 
     @Override
     protected void dragHandler(MouseEvent e) {
-
+        System.out.println("Road Dragged");
     }
 }

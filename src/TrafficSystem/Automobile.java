@@ -45,7 +45,7 @@ public class Automobile extends Renderable implements TrafficControlListener, Mo
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
+    public void render(Graphics2D g2d) {
         System.out.println("painting automobile");
         g2d.setColor(Color.BLACK);
         g2d.fill(automobileImage);

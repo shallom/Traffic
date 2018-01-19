@@ -34,6 +34,6 @@ public abstract class Renderable extends MouseEventHandler {
 
     public abstract void delete();
 
-    public abstract void paint(Graphics2D g2d);
+    public abstract void render(Graphics2D g2d);
 
 }

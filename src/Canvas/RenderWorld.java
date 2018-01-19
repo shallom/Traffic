@@ -3,7 +3,6 @@ package Canvas;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 
 //Class is a singleton
@@ -18,6 +17,8 @@ public class RenderWorld extends JPanel{
 
     private RenderWorld() {
         setOpaque(true);
+        addMouseListener(TrafficSystemCreator.getInstance());
+        addMouseMotionListener(TrafficSystemCreator.getInstance());
         setBackground(Color.GREEN);
         foreGroundRenderQue = new ArrayList<>();
         backGroundRenderQue = new ArrayList<>();
@@ -26,17 +27,14 @@ public class RenderWorld extends JPanel{
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(getBackground());
-        g.fillRect(0, 0, getWidth(), getHeight());
-        g.setColor(getForeground());
         for (Renderable object : backGroundRenderQue) {
             Graphics2D g2d = (Graphics2D) g.create();
-            object.paint(g2d);
+            object.render(g2d);
             g2d.dispose();
         }
         for (Renderable object : foreGroundRenderQue) {
             Graphics2D g2d = (Graphics2D) g.create();
-            object.paint(g2d);
+            object.render(g2d);
             g2d.dispose();
         }
     }

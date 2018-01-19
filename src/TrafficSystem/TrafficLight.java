@@ -37,7 +37,6 @@ public class TrafficLight extends Renderable implements TrafficController{
         Point p = new Point(xPos,yPos);
         Dimension d = new Dimension(length, width);
         trafficLight = new Rectangle(p, d);
-        registerArea(p, d);
         currentLight = Color.RED;
         listeningObjects = new ArrayList<>();
     }
@@ -58,13 +57,12 @@ public class TrafficLight extends Renderable implements TrafficController{
         if(!isDeleted()){
             trafficLightHashMap.remove(roadToControl);
             RenderWorld.delete(this);
-            unregisterCanvasArea();
         }
         setDeleted();
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
+    public void render(Graphics2D g2d) {
         System.out.println("Painting Light");
         g2d.setColor(currentLight);
         g2d.fill(trafficLight);
@@ -72,6 +70,6 @@ public class TrafficLight extends Renderable implements TrafficController{
 
     @Override
     protected void dragHandler(MouseEvent e) {
-
+        System.out.println("Light Dragged");
     }
 }

@@ -38,7 +38,8 @@ public class TrafficSystemCreator extends JPanel implements MouseListener, Mouse
     @Override
     public void mouseClicked(MouseEvent e) {
         // e.getX(), e.getY());
-        WorldPositioningSystem.addIntersection(new Intersection(2, e.getX() - TWO_WAY_INTERSECTION_WIDTH / 2, e.getY() - TWO_WAY_INTERSECTION_WIDTH));
+        System.out.println("In traffic: x:y -> " + e.getX() + ":" + e.getY());
+        WorldPositioningSystem.addIntersection(new Intersection(2, e.getPoint().x, e.getPoint().y ));
         RenderWorld.getInstance().repaint();
     }
 

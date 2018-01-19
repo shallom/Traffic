@@ -21,7 +21,6 @@ public class Intersection extends Renderable{
 
     public Intersection(int numberWayInterSection, int xPos, int yPos){
         updateRenderQue();
-
         roads = new ArrayList<>();
         intersectionPoint = new Point(xPos, yPos);
         trafficLights = new ArrayList<>();
@@ -39,7 +38,8 @@ public class Intersection extends Renderable{
         //Build roads
         Point p = new Point(point);
         Dimension d = new Dimension(TWO_WAY_INTERSECTION_WIDTH, TWO_WAY_INTERSECTION_WIDTH);
-        intersection = new Rectangle(new Rectangle(p, d));
+        intersection = new Rectangle(p, d);
+        System.out.println("In intersect: x:y -> " + intersection.x + ":" + intersection.y);
         registerArea(p, d);
         Road roadIn1 = new Road("left-right-1", TrafficFlow.LEFT_TO_RIGHT,  point.x - INITIAL_ROAD_LENGTH, point.y, INITIAL_ROAD_LENGTH, TWO_WAY_INTERSECTION_WIDTH);
         roads.add(roadIn1);
@@ -113,7 +113,7 @@ public class Intersection extends Renderable{
 
 
     @Override
-    public void paint(Graphics2D g2d) {
+    public void render(Graphics2D g2d) {
         System.out.println("painting intersection");
         g2d.setColor(Color.BLACK);
         g2d.fill(intersection);
@@ -125,7 +125,7 @@ public class Intersection extends Renderable{
         RenderWorld.getInstance().repaint();
 
         //add new intersection
-        WorldPositioningSystem.addIntersection(new Intersection(2, e.getX() - TWO_WAY_INTERSECTION_WIDTH / 2, e.getY() - TWO_WAY_INTERSECTION_WIDTH));
+        WorldPositioningSystem.addIntersection(new Intersection(2, e.getX(), e.getY()));
         RenderWorld.getInstance().repaint();
     }
 }

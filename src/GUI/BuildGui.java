@@ -27,7 +27,7 @@ public class BuildGui {
         contentFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         contentFrame.setPreferredSize(new Dimension(width, height));
         contentFrame.setLocationRelativeTo(null);
-        contentFrame.add(RenderWorld.getInstance(), BorderLayout.CENTER);
+        contentFrame.add(RenderWorld.getInstance());
         contentFrame.pack();
         contentFrame.setVisible(true); //need to set this to true when we are ready to start running
         contentFrame.addComponentListener(new ComponentAdapter()
